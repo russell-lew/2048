@@ -1,1 +1,49 @@
 @import 'tailwindcss';
+
+@theme {
+  --color-background-10: #faf8ef;
+  --color-background-20: #b59d87;
+  --color-cell-background: #cebda6;
+  --color-button-background: #8f7a66;
+  --color-primary-text-color: #776e65;
+  --color-secondary-text-color: #f9f6f2;
+}
+
+@layer components {
+  .tile-empty {
+    @apply bg-cell-background;
+  }
+  .tile-2 {
+    @apply text-primary-text-color bg-[#eee4da];
+  }
+  .tile-4 {
+    @apply text-primary-text-color bg-[#ede0c8];
+  }
+  .tile-8 {
+    @apply text-secondary-text-color bg-[#f2b179];
+  }
+  .tile-16 {
+    @apply text-secondary-text-color bg-[#f59563];
+  }
+  .tile-32 {
+    @apply text-secondary-text-color bg-[#f67c5f];
+  }
+  .tile-64 {
+    @apply text-secondary-text-color bg-[#f65e3b];
+  }
+  .tile-128 {
+    @apply text-secondary-text-color bg-[#edcf72];
+  }
+  .tile-256 {
+    @apply text-secondary-text-color bg-[#edcc61];
+  }
+  .tile-512 {
+    @apply text-secondary-text-color bg-[#edc850];
+  }
+  .tile-1024 {
+    @apply text-secondary-text-color bg-[#edc53f];
+  }
+  .tile-2048 {
+    @apply text-secondary-text-color bg-[#edc22e];
+  }
+}
