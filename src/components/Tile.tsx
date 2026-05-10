@@ -5,7 +5,9 @@ export const Tile = memo(({ id, value }: TileProps) => (
     id={id}
     className={`@container group relative flex items-center justify-center tile-${value} rounded aspect-square overflow-hidden`}
   >
-    <span className="font-semibold text-2xl md:text-3xl">{value}</span>
+    {value > 0 && (
+      <span className="font-semibold text-2xl md:text-3xl">{value}</span>
+    )}
   </div>
 ))
 

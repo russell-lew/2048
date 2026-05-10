@@ -10,7 +10,7 @@
 }
 
 @layer components {
-  .tile-empty {
+  .tile-0 {
     @apply bg-cell-background;
   }
   .tile-2 {
