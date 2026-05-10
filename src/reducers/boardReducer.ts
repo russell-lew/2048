@@ -1,17 +1,24 @@
 import { BOARD_SIZE } from '../constants/constants'
-import { getRandomInt, getRowColFromIndex } from '../utils/board-helpers'
+import { getRandomInt, getRowColFromIndex, move } from '../utils/board-helpers'
 
 export const boardReducer = (state: State, action: Action): State => {
   switch (action) {
-    case 'reset':
+    case 'reset': {
       const newBoard = [...emptyBoard]
       randomSpawn(newBoard, 'multi')
       return {
         ...state,
         board: newBoard,
       }
+    }
+    case 'move_left': {
+      return {
+        ...state,
+        board: move(state.board),
+      }
+    }
     default:
-      return initialState
+      return state
   }
 }
 
@@ -19,7 +26,7 @@ type State = {
   board: number[][]
 }
 
-type Action = 'reset' | 'up' | 'down' | 'left' | 'right'
+type Action = 'reset' | 'move_up' | 'move_down' | 'move_left' | 'move_right'
 
 const emptyBoard: number[][] = Array.from({ length: BOARD_SIZE }, () =>
   Array(BOARD_SIZE).fill(0),

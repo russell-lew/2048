@@ -3,10 +3,10 @@ import { boardReducer } from './boardReducer'
 
 const mockState = {
   board: [
+    [0, 8, 2, 2],
+    [4, 2, 0, 2],
+    [0, 0, 0, 0],
     [0, 0, 0, 2],
-    [0, 4, 8, 16],
-    [32, 32, 64, 16],
-    [128, 128, 256, 256],
   ],
 }
 
@@ -19,4 +19,15 @@ it('should generate an initial board with a random number of `2`s at random cell
   const activeTiles = resetState.board.flat().filter((t) => t != 0)
   expect(activeTiles).toHaveLength(1)
   randomSpy.mockRestore()
+})
+
+it('should shift tiles correctly for move left', () => {
+  const shiftedState = boardReducer(mockState, 'move_left')
+  const expectedBoard = [
+    [8, 4, 0, 0],
+    [4, 4, 0, 0],
+    [0, 0, 0, 0],
+    [2, 0, 0, 0],
+  ]
+  expect(shiftedState.board).toEqual(expectedBoard)
 })
