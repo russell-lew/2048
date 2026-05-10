@@ -1,4 +1,8 @@
-import { createInitialState, move } from '../utils/board-helpers'
+import {
+  createInitialState,
+  move,
+  randomSpawnInPlace,
+} from '../utils/board-helpers'
 
 export const boardReducer = (state: State, action: Action): State => {
   switch (action) {
@@ -6,27 +10,32 @@ export const boardReducer = (state: State, action: Action): State => {
       return createInitialState()
     }
     case 'move_left': {
+      const newBoard = move(state.board, 'left')
+      randomSpawnInPlace(newBoard, 'single')
       return {
         ...state,
-        board: move(state.board, 'left'),
+        board: newBoard,
       }
     }
     case 'move_right': {
+      const newBoard = move(state.board, 'right')
+      randomSpawnInPlace(newBoard, 'single')
       return {
         ...state,
-        board: move(state.board, 'right'),
+        board: newBoard,
       }
     }
     case 'move_up': {
-      return {
-        ...state,
-        board: move(state.board, 'up'),
-      }
+      const newBoard = move(state.board, 'up')
+      randomSpawnInPlace(newBoard, 'single')
+      return { ...state, board: newBoard }
     }
     case 'move_down': {
+      const newBoard = move(state.board, 'down')
+      randomSpawnInPlace(newBoard, 'single')
       return {
         ...state,
-        board: move(state.board, 'down'),
+        board: newBoard,
       }
     }
     default:

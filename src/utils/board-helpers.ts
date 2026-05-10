@@ -86,7 +86,10 @@ const moveLeft = (board: number[][]): number[][] =>
     return newRow
   })
 
-const randomSpawn = (board: number[][], mode: 'single' | 'multi'): void => {
+export const randomSpawnInPlace = (
+  board: number[][],
+  mode: 'single' | 'multi',
+): void => {
   const numSpawn = mode == 'single' ? 1 : getRandomInt(1, 5)
   const spawnIndices = Array.from({ length: numSpawn }, () =>
     getRandomInt(0, BOARD_SIZE * BOARD_SIZE - 1),
@@ -102,7 +105,7 @@ const emptyBoard: number[][] = Array.from({ length: BOARD_SIZE }, () =>
 
 export const createInitialState = (): State => {
   const newBoard = [...emptyBoard]
-  randomSpawn(newBoard, 'multi')
+  randomSpawnInPlace(newBoard, 'multi')
   return {
     board: newBoard,
   }
