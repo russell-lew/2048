@@ -1,4 +1,5 @@
 import { BOARD_SIZE } from '../constants/constants'
+import type { State } from '../reducers/boardReducer'
 
 export const getRandomInt = (min: number, max: number): number => {
   min = Math.ceil(min)
@@ -84,3 +85,29 @@ const moveLeft = (board: number[][]): number[][] =>
     }
     return newRow
   })
+
+const randomSpawn = (board: number[][], mode: 'single' | 'multi'): void => {
+  const numSpawn = mode == 'single' ? 1 : getRandomInt(1, 5)
+  const spawnIndices = Array.from({ length: numSpawn }, () =>
+    getRandomInt(0, BOARD_SIZE * BOARD_SIZE - 1),
+  )
+  for (const i of spawnIndices) {
+    const { row, col } = getRowColFromIndex(i)
+    board[row][col] = 2
+  }
+}
+const emptyBoard: number[][] = Array.from({ length: BOARD_SIZE }, () =>
+  Array(BOARD_SIZE).fill(0),
+)
+
+export const createInitialState = (): State => {
+  const newBoard = [...emptyBoard]
+  randomSpawn(newBoard, 'multi')
+  return {
+    board: newBoard,
+  }
+}
+
+export const initialState: State = {
+  board: emptyBoard,
+}
