@@ -23,6 +23,18 @@ export const boardReducer = (state: State, action: Action): State => {
         board: move(state.board, 'right'),
       }
     }
+    case 'move_up': {
+      return {
+        ...state,
+        board: move(state.board, 'up'),
+      }
+    }
+    case 'move_down': {
+      return {
+        ...state,
+        board: move(state.board, 'down'),
+      }
+    }
     default:
       return state
   }

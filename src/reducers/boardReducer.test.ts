@@ -40,7 +40,27 @@ it('should shift tiles correctly for move right', () => {
     [0, 0, 0, 0],
     [0, 0, 0, 2],
   ]
-  expect(JSON.stringify(shiftedState.board)).toEqual(
-    JSON.stringify(expectedBoard),
-  )
+  expect(shiftedState.board).toEqual(expectedBoard)
+})
+
+it('should shift tiles correctly for move up', () => {
+  const shiftedState = boardReducer(mockState, 'move_up')
+  const expectedBoard = [
+    [4, 8, 2, 4],
+    [0, 2, 0, 2],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+  ]
+  expect(shiftedState.board).toEqual(expectedBoard)
+})
+
+it('should shift tiles correctly for move down', () => {
+  const shiftedState = boardReducer(mockState, 'move_down')
+  const expectedBoard = [
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 8, 0, 2],
+    [4, 2, 2, 4],
+  ]
+  expect(shiftedState.board).toEqual(expectedBoard)
 })

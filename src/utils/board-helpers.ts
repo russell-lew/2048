@@ -22,18 +22,44 @@ const reverseInPlace = (m: number[][]) => {
   }
 }
 
+const transposeInPlace = (m: number[][]) => {
+  const size = m.length
+  for (let i = 0; i < size; i++) {
+    for (let j = i + 1; j < size; j++) {
+      ;[m[i][j], m[j][i]] = [m[j][i], m[i][j]]
+    }
+  }
+}
+
 export const move = (
   board: number[][],
-  direction: 'left' | 'right',
+  direction: 'up' | 'down' | 'left' | 'right',
 ): number[][] => {
   switch (direction) {
     case 'left': {
       return moveLeft(board)
     }
     case 'right': {
-      reverseInPlace(board)
-      const newBoard = moveLeft(board)
+      const copy = board.map((row) => [...row])
+      reverseInPlace(copy)
+      const newBoard = moveLeft(copy)
       reverseInPlace(newBoard)
+      return newBoard
+    }
+    case 'up': {
+      const copy = board.map((row) => [...row])
+      transposeInPlace(copy)
+      const newBoard = moveLeft(copy)
+      transposeInPlace(newBoard)
+      return newBoard
+    }
+    case 'down': {
+      const copy = board.map((row) => [...row])
+      transposeInPlace(copy)
+      reverseInPlace(copy)
+      const newBoard = moveLeft(copy)
+      reverseInPlace(newBoard)
+      transposeInPlace(newBoard)
       return newBoard
     }
     default:
