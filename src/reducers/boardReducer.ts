@@ -12,10 +12,12 @@ export const boardReducer = (state: GameState, action: Action): GameState => {
     }
     case 'move': {
       const newBoard = move(state.board, action.direction)
+      const latestStatus = getGameStatus(newBoard)
       randomSpawnInPlace(newBoard, 'single')
       return {
         ...state,
         board: newBoard,
+        ...(latestStatus != state.status && { status: latestStatus }),
       }
     }
     case 'check': {

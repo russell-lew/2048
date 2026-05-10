@@ -1,12 +1,14 @@
 import { useEffect, useReducer } from 'react'
 import { boardReducer } from '../reducers/boardReducer'
 import { createInitialState } from '../utils/board-helpers'
+import { Overlay } from './Overay'
 import { Tile } from './Tile'
 
 export const Board = () => {
   const [state, dispatch] = useReducer(boardReducer, createInitialState())
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (state.status != 'playing') return
       e.preventDefault()
       switch (e.key) {
         case 'ArrowUp': {
@@ -39,6 +41,20 @@ export const Board = () => {
           )),
         )}
       </div>
+      {state.status == 'gameOver' && (
+        <Overlay
+          message={'Game Over!'}
+          cta={'Try again'}
+          handleClick={() => dispatch({ type: 'reset' })}
+        />
+      )}
+      {state.status == 'win' && (
+        <Overlay
+          message={'You won!'}
+          cta={'Play again'}
+          handleClick={() => dispatch({ type: 'reset' })}
+        />
+      )}
     </div>
   )
 }
