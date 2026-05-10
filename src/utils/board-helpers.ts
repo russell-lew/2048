@@ -104,7 +104,7 @@ const emptyBoard: number[][] = Array.from({ length: BOARD_SIZE }, () =>
 )
 
 export const createInitialState = (): State => {
-  const newBoard = [...emptyBoard]
+  const newBoard = emptyBoard.map((row) => [...row])
   randomSpawnInPlace(newBoard, 'multi')
   return {
     board: newBoard,
