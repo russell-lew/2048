@@ -125,3 +125,19 @@ it('should determine endgame condition, lose', () => {
   })
   expect(updatedState.status).toEqual('gameOver')
 })
+
+it('should determine endgame condition, win', () => {
+  const gameOverState = {
+    ...mockState,
+    board: [
+      [2048, 4, 2, 4],
+      [4, 2, 4, 2],
+      [2, 4, 2, 4],
+      [4, 2, 4, 2],
+    ],
+  }
+  const updatedState = boardReducer(gameOverState, {
+    type: 'check',
+  })
+  expect(updatedState.status).toEqual('win')
+})

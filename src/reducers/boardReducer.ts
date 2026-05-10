@@ -1,6 +1,6 @@
 import {
   createInitialState,
-  isGameOver,
+  getGameStatus,
   move,
   randomSpawnInPlace,
 } from '../utils/board-helpers'
@@ -21,7 +21,7 @@ export const boardReducer = (state: GameState, action: Action): GameState => {
     case 'check': {
       return {
         ...state,
-        status: isGameOver(state.board) ? 'gameOver' : 'playing',
+        status: getGameStatus(state.board),
       }
     }
     default:
@@ -31,8 +31,10 @@ export const boardReducer = (state: GameState, action: Action): GameState => {
 
 export type GameState = {
   board: number[][]
-  status: 'playing' | 'gameOver' | 'win'
+  status: GameStatus
 }
+
+export type GameStatus = 'playing' | 'win' | 'gameOver'
 
 export type Direction = 'up' | 'down' | 'left' | 'right'
 

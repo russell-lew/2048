@@ -1,5 +1,5 @@
-import { BOARD_SIZE } from '../constants/constants'
-import type { GameState } from '../reducers/boardReducer'
+import { BOARD_SIZE, WIN_CONDITION } from '../constants/constants'
+import type { GameState, GameStatus } from '../reducers/boardReducer'
 
 export const getRandomInt = (min: number, max: number): number => {
   min = Math.ceil(min)
@@ -126,17 +126,23 @@ export const createInitialState = (): GameState => {
   }
 }
 
-export const isGameOver = (board: number[][]): boolean => {
-  if (getEmptyCells(board).length > 0) return false
+export const getGameStatus = (board: number[][]): GameStatus => {
+  if (hasWinningTile(board)) return 'win'
+
+  if (getEmptyCells(board).length > 0) return 'playing'
   for (let row = 0; row < BOARD_SIZE - 1; row++) {
     for (let col = 0; col < BOARD_SIZE - 1; col++) {
       if (
         board[row][col] == board[row][col + 1] ||
-        board[row][col] == board[row + 1][col + 1]
+        board[row][col] == board[row + 1][col]
       ) {
-        return true
+        return 'playing'
       }
     }
   }
-  return false
+  return 'gameOver'
+}
+
+const hasWinningTile = (board: number[][]): boolean => {
+  return board.some((row) => row.some((tile) => tile >= WIN_CONDITION))
 }
