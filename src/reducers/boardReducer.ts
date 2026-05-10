@@ -1,13 +1,13 @@
 import {
   createInitialState,
+  isGameOver,
   move,
   randomSpawnInPlace,
 } from '../utils/board-helpers'
 
-export const boardReducer = (state: State, action: Action): State => {
+export const boardReducer = (state: GameState, action: Action): GameState => {
   switch (action.type) {
     case 'reset': {
-      console.log('resetting')
       return createInitialState()
     }
     case 'move': {
@@ -18,16 +18,25 @@ export const boardReducer = (state: State, action: Action): State => {
         board: newBoard,
       }
     }
-
+    case 'check': {
+      return {
+        ...state,
+        status: isGameOver(state.board) ? 'gameOver' : 'playing',
+      }
+    }
     default:
       return state
   }
 }
 
-export type State = {
+export type GameState = {
   board: number[][]
+  status: 'playing' | 'gameOver' | 'win'
 }
 
 export type Direction = 'up' | 'down' | 'left' | 'right'
 
-type Action = { type: 'reset' } | { type: 'move'; direction: Direction }
+type Action =
+  | { type: 'reset' }
+  | { type: 'move'; direction: Direction }
+  | { type: 'check' }

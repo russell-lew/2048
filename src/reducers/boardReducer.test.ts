@@ -1,8 +1,9 @@
 import { afterEach, expect, it, vi } from 'vitest'
 import * as helpers from '../utils/board-helpers'
-import { boardReducer } from './boardReducer'
+import { boardReducer, type GameState } from './boardReducer'
 
-const mockState = {
+const mockState: GameState = {
+  status: 'playing',
   board: [
     [0, 8, 2, 2],
     [4, 2, 0, 2],
@@ -26,6 +27,7 @@ it('should generate an initial board with a random number of `2`s at random cell
   expect(resetState.board[0][1]).toBe(2)
   const activeTiles = resetState.board.flat().filter((t) => t != 0)
   expect(activeTiles).toHaveLength(1)
+  expect(resetState.status).toBe('playing')
 })
 
 it('should shift tiles correctly for move left', () => {
@@ -41,6 +43,7 @@ it('should shift tiles correctly for move left', () => {
     [2, 0, 0, 0],
   ]
   expect(shiftedState.board).toEqual(expectedBoard)
+  expect(shiftedState.status).toBe('playing')
 })
 
 it('should shift tiles correctly for move right', () => {
@@ -56,6 +59,7 @@ it('should shift tiles correctly for move right', () => {
     [0, 0, 0, 2],
   ]
   expect(shiftedState.board).toEqual(expectedBoard)
+  expect(shiftedState.status).toBe('playing')
 })
 
 it('should shift tiles correctly for move up', () => {
@@ -71,6 +75,7 @@ it('should shift tiles correctly for move up', () => {
     [0, 0, 0, 0],
   ]
   expect(shiftedState.board).toEqual(expectedBoard)
+  expect(shiftedState.status).toBe('playing')
 })
 
 it('should shift tiles correctly for move down', () => {
@@ -86,6 +91,7 @@ it('should shift tiles correctly for move down', () => {
     [4, 2, 2, 4],
   ]
   expect(shiftedState.board).toEqual(expectedBoard)
+  expect(shiftedState.status).toBe('playing')
 })
 
 it('should generate a `2` or `4` at a random empty space after each valid move that changes the board', () => {
@@ -101,4 +107,21 @@ it('should generate a `2` or `4` at a random empty space after each valid move t
     [2, 0, 0, 4],
   ]
   expect(shiftedState.board).toEqual(expectedBoard)
+  expect(shiftedState.status).toBe('playing')
+})
+
+it('should determine endgame condition, lose', () => {
+  const gameOverState = {
+    ...mockState,
+    board: [
+      [2, 4, 2, 4],
+      [4, 2, 4, 2],
+      [2, 4, 2, 4],
+      [4, 2, 4, 2],
+    ],
+  }
+  const updatedState = boardReducer(gameOverState, {
+    type: 'check',
+  })
+  expect(updatedState.status).toEqual('gameOver')
 })

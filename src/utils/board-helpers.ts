@@ -1,5 +1,5 @@
 import { BOARD_SIZE } from '../constants/constants'
-import type { State } from '../reducers/boardReducer'
+import type { GameState } from '../reducers/boardReducer'
 
 export const getRandomInt = (min: number, max: number): number => {
   min = Math.ceil(min)
@@ -117,10 +117,26 @@ const emptyBoard: number[][] = Array.from({ length: BOARD_SIZE }, () =>
   Array(BOARD_SIZE).fill(0),
 )
 
-export const createInitialState = (): State => {
+export const createInitialState = (): GameState => {
   const newBoard = emptyBoard.map((row) => [...row])
   randomSpawnInPlace(newBoard, 'multi')
   return {
+    status: 'playing',
     board: newBoard,
   }
+}
+
+export const isGameOver = (board: number[][]): boolean => {
+  if (getEmptyCells(board).length > 0) return false
+  for (let row = 0; row < BOARD_SIZE - 1; row++) {
+    for (let col = 0; col < BOARD_SIZE - 1; col++) {
+      if (
+        board[row][col] == board[row][col + 1] ||
+        board[row][col] == board[row + 1][col + 1]
+      ) {
+        return true
+      }
+    }
+  }
+  return false
 }
