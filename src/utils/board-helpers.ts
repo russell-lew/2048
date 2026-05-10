@@ -7,10 +7,8 @@ export const getRandomInt = (min: number, max: number): number => {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-export const getRowColFromIndex = (i: number): { row: number; col: number } => {
-  const row = Math.floor(i / BOARD_SIZE)
-  const col = i % BOARD_SIZE
-  return { row, col }
+const getRandomSpawnValue = (): number => {
+  return Math.random() < 0.8 ? 2 : 4
 }
 
 const reverseInPlace = (m: number[][]) => {
@@ -90,15 +88,31 @@ export const randomSpawnInPlace = (
   board: number[][],
   mode: 'single' | 'multi',
 ): void => {
-  const numSpawn = mode == 'single' ? 1 : getRandomInt(1, 5)
-  const spawnIndices = Array.from({ length: numSpawn }, () =>
-    getRandomInt(0, BOARD_SIZE * BOARD_SIZE - 1),
-  )
-  for (const i of spawnIndices) {
-    const { row, col } = getRowColFromIndex(i)
-    board[row][col] = 2
+  const emptyCells = getEmptyCells(board)
+  if (emptyCells.length == 0) return
+
+  const requestedSpawn = mode == 'single' ? 1 : getRandomInt(1, 5)
+  const numSpawn = Math.min(requestedSpawn, emptyCells.length)
+
+  for (let i = 0; i < numSpawn; i++) {
+    const randomIdx = getRandomInt(0, emptyCells.length - 1)
+    const [{ r, c }] = emptyCells.splice(randomIdx, 1)
+    board[r][c] = getRandomSpawnValue()
   }
 }
+
+const getEmptyCells = (board: number[][]): { r: number; c: number }[] => {
+  const result: { r: number; c: number }[] = []
+  board.forEach((row, r) => {
+    row.forEach((_, c) => {
+      if (board[r][c] == 0) {
+        result.push({ r, c })
+      }
+    })
+  })
+  return result
+}
+
 const emptyBoard: number[][] = Array.from({ length: BOARD_SIZE }, () =>
   Array(BOARD_SIZE).fill(0),
 )
