@@ -12,12 +12,39 @@ export const getRowColFromIndex = (i: number): { row: number; col: number } => {
   return { row, col }
 }
 
-export const move = (board: number[][]): number[][] => {
-  console.log(board)
-  return board.map((row) => {
+const reverseInPlace = (m: number[][]) => {
+  const size = m.length
+  for (let i = 0; i < size; i++) {
+    for (let j = 0; j < Math.floor(size / 2); j++) {
+      const targetIndex = size - 1 - j
+      ;[m[i][j], m[i][targetIndex]] = [m[i][targetIndex], m[i][j]]
+    }
+  }
+}
+
+export const move = (
+  board: number[][],
+  direction: 'left' | 'right',
+): number[][] => {
+  switch (direction) {
+    case 'left': {
+      return moveLeft(board)
+    }
+    case 'right': {
+      reverseInPlace(board)
+      const newBoard = moveLeft(board)
+      reverseInPlace(newBoard)
+      return newBoard
+    }
+    default:
+      return board
+  }
+}
+
+const moveLeft = (board: number[][]): number[][] =>
+  board.map((row) => {
     const newRow = []
     const filteredRow = row.filter((n) => n != 0)
-    console.log(filteredRow)
     for (let i = 0; i < filteredRow.length; i++) {
       if (i < filteredRow.length - 1 && filteredRow[i] == filteredRow[i + 1]) {
         newRow.push(filteredRow[i] * 2)
@@ -31,4 +58,3 @@ export const move = (board: number[][]): number[][] => {
     }
     return newRow
   })
-}

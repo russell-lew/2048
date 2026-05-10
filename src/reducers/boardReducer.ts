@@ -14,7 +14,13 @@ export const boardReducer = (state: State, action: Action): State => {
     case 'move_left': {
       return {
         ...state,
-        board: move(state.board),
+        board: move(state.board, 'left'),
+      }
+    }
+    case 'move_right': {
+      return {
+        ...state,
+        board: move(state.board, 'right'),
       }
     }
     default:
