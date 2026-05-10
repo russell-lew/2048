@@ -10,19 +10,19 @@ export const Board = () => {
       e.preventDefault()
       switch (e.key) {
         case 'ArrowUp': {
-          dispatch('move_up')
+          dispatch({ type: 'move', direction: 'up' })
           return
         }
         case 'ArrowDown': {
-          dispatch('move_down')
+          dispatch({ type: 'move', direction: 'down' })
           return
         }
         case 'ArrowLeft': {
-          dispatch('move_left')
+          dispatch({ type: 'move', direction: 'left' })
           return
         }
         case 'ArrowRight': {
-          dispatch('move_right')
+          dispatch({ type: 'move', direction: 'right' })
           return
         }
       }

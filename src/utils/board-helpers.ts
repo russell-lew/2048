@@ -110,7 +110,3 @@ export const createInitialState = (): State => {
     board: newBoard,
   }
 }
-
-export const initialState: State = {
-  board: emptyBoard,
-}

@@ -12,7 +12,7 @@ const mockState = {
 
 it('should generate an initial board with a random number of `2`s at random cells', () => {
   const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0.1)
-  const resetState = boardReducer(mockState, 'reset')
+  const resetState = boardReducer(mockState, { type: 'reset' })
   expect(resetState.board).toHaveLength(4)
   expect(resetState.board[0]).toHaveLength(4)
   expect(resetState.board[0][1]).toBe(2)
@@ -22,7 +22,10 @@ it('should generate an initial board with a random number of `2`s at random cell
 })
 
 it('should shift tiles correctly for move left', () => {
-  const shiftedState = boardReducer(mockState, 'move_left')
+  const shiftedState = boardReducer(mockState, {
+    type: 'move',
+    direction: 'left',
+  })
   const expectedBoard = [
     [8, 4, 0, 0],
     [4, 4, 0, 0],
@@ -33,7 +36,10 @@ it('should shift tiles correctly for move left', () => {
 })
 
 it('should shift tiles correctly for move right', () => {
-  const shiftedState = boardReducer(mockState, 'move_right')
+  const shiftedState = boardReducer(mockState, {
+    type: 'move',
+    direction: 'right',
+  })
   const expectedBoard = [
     [0, 0, 8, 4],
     [0, 0, 4, 4],
@@ -44,7 +50,10 @@ it('should shift tiles correctly for move right', () => {
 })
 
 it('should shift tiles correctly for move up', () => {
-  const shiftedState = boardReducer(mockState, 'move_up')
+  const shiftedState = boardReducer(mockState, {
+    type: 'move',
+    direction: 'up',
+  })
   const expectedBoard = [
     [4, 8, 2, 4],
     [0, 2, 0, 2],
@@ -55,7 +64,10 @@ it('should shift tiles correctly for move up', () => {
 })
 
 it('should shift tiles correctly for move down', () => {
-  const shiftedState = boardReducer(mockState, 'move_down')
+  const shiftedState = boardReducer(mockState, {
+    type: 'move',
+    direction: 'down',
+  })
   const expectedBoard = [
     [0, 0, 0, 0],
     [0, 0, 0, 0],
