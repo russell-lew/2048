@@ -33,7 +33,7 @@ const transposeInPlace = (m: number[][]) => {
 export const move = (
   board: number[][],
   direction: 'up' | 'down' | 'left' | 'right',
-): number[][] => {
+): { newBoard: number[][]; didMove: boolean } => {
   switch (direction) {
     case 'left': {
       return moveLeft(board)
@@ -41,33 +41,36 @@ export const move = (
     case 'right': {
       const copy = board.map((row) => [...row])
       reverseInPlace(copy)
-      const newBoard = moveLeft(copy)
+      const { newBoard, didMove } = moveLeft(copy)
       reverseInPlace(newBoard)
-      return newBoard
+      return { newBoard, didMove }
     }
     case 'up': {
       const copy = board.map((row) => [...row])
       transposeInPlace(copy)
-      const newBoard = moveLeft(copy)
+      const { newBoard, didMove } = moveLeft(copy)
       transposeInPlace(newBoard)
-      return newBoard
+      return { newBoard, didMove }
     }
     case 'down': {
       const copy = board.map((row) => [...row])
       transposeInPlace(copy)
       reverseInPlace(copy)
-      const newBoard = moveLeft(copy)
+      const { newBoard, didMove } = moveLeft(copy)
       reverseInPlace(newBoard)
       transposeInPlace(newBoard)
-      return newBoard
+      return { newBoard, didMove }
     }
     default:
-      return board
+      return { newBoard: board, didMove: false }
   }
 }
 
-const moveLeft = (board: number[][]): number[][] =>
-  board.map((row) => {
+const moveLeft = (
+  board: number[][],
+): { newBoard: number[][]; didMove: boolean } => {
+  let didMove = false
+  const newBoard = board.map((row) => {
     const newRow = []
     const filteredRow = row.filter((n) => n != 0)
     for (let i = 0; i < filteredRow.length; i++) {
@@ -81,8 +84,14 @@ const moveLeft = (board: number[][]): number[][] =>
     while (newRow.length < BOARD_SIZE) {
       newRow.push(0)
     }
+    const rowChanged = newRow.some((val, index) => val !== row[index])
+    if (rowChanged) {
+      didMove = true
+    }
     return newRow
   })
+  return { newBoard, didMove }
+}
 
 export const randomSpawnInPlace = (
   board: number[][],
