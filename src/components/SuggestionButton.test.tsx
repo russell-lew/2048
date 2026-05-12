@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { CTA_LABEL_DEFAULT, CTA_LABEL_LOADING } from '../constants/constants'
 import { SuggestionButton } from './SuggestionButton'
@@ -8,6 +8,11 @@ describe('SuggestionButton', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    vi.useFakeTimers({ shouldAdvanceTime: true })
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
   })
 
   it('should render in the initial state with correct default text', () => {
@@ -63,5 +68,22 @@ describe('SuggestionButton', () => {
     fireEvent.click(button)
 
     expect(mockGetSuggestion).toHaveBeenCalledTimes(1)
+  })
+
+  it('should displays the suggestion and then hides it after 3 seconds', async () => {
+    mockGetSuggestion.mockResolvedValue('right')
+    render(<SuggestionButton getSuggestion={mockGetSuggestion} />)
+
+    fireEvent.click(screen.getByRole('button'))
+
+    await waitFor(() => {
+      expect(screen.getByText('right')).toBeInTheDocument()
+    })
+
+    act(() => {
+      vi.advanceTimersByTime(3100)
+    })
+
+    expect(screen.queryByText('right')).not.toBeInTheDocument()
   })
 })
