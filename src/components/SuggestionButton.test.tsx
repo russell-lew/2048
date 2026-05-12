@@ -86,4 +86,21 @@ describe('SuggestionButton', () => {
 
     expect(screen.queryByText('right')).not.toBeInTheDocument()
   })
+
+  it('should display an error message if the fetch fails', async () => {
+    mockGetSuggestion.mockRejectedValue(new Error('Wasm Crash'))
+
+    render(<SuggestionButton getSuggestion={mockGetSuggestion} />)
+    fireEvent.click(screen.getByRole('button'))
+
+    await waitFor(() => {
+      expect(screen.getByText(/Failed to analyze/i)).toBeInTheDocument()
+    })
+
+    act(() => {
+      vi.advanceTimersByTime(3000)
+    })
+
+    expect(screen.queryByText(/Failed to analyze/i)).not.toBeInTheDocument()
+  })
 })

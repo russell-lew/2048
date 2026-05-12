@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react'
-import { CTA_LABEL_DEFAULT, CTA_LABEL_LOADING } from '../constants/constants'
+import {
+  CTA_LABEL_DEFAULT,
+  CTA_LABEL_ERROR,
+  CTA_LABEL_LOADING,
+} from '../constants/constants'
 
 export const SuggestionButton = ({
   getSuggestion,
@@ -7,11 +11,13 @@ export const SuggestionButton = ({
   getSuggestion: () => Promise<string | null>
 }) => {
   const [isLoading, setIsLoading] = useState(false)
+  const [isError, setIsError] = useState(false)
   const [suggestion, setSuggestion] = useState<string | null>(null)
 
   const handleClick = async () => {
     if (isLoading) return
     setIsLoading(true)
+    setIsError(false)
 
     try {
       const result = await getSuggestion()
@@ -19,7 +25,9 @@ export const SuggestionButton = ({
         setSuggestion(result)
       }
     } catch (error) {
+      setIsError(true)
       console.error('AI Error:', error)
+      setTimeout(() => setIsError(false), 3000)
     } finally {
       setIsLoading(false)
     }
@@ -46,7 +54,8 @@ export const SuggestionButton = ({
       <button
         type="button"
         onClick={handleClick}
-        className="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center leading-5 shadow-lg transition-transform active:scale-95 flex items-center"
+        disabled={isError}
+        className={`text-white ${isError ? 'bg-red-500 cursor-not-allowed' : 'bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200'} font-medium rounded-lg text-sm px-5 py-2.5 text-center leading-5 shadow-lg transition-transform active:scale-95 flex items-center`}
       >
         <div
           className={`w-5 h-5 mr-2 bg-white ${isLoading ? 'animate-pulse' : ''}`}
@@ -58,7 +67,11 @@ export const SuggestionButton = ({
             maskPosition: 'center',
           }}
         />
-        {isLoading ? CTA_LABEL_LOADING : CTA_LABEL_DEFAULT}
+        {isLoading
+          ? CTA_LABEL_LOADING
+          : isError
+            ? CTA_LABEL_ERROR
+            : CTA_LABEL_DEFAULT}
       </button>
     </div>
   )
