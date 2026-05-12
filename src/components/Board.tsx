@@ -1,7 +1,10 @@
 import { useEffect, useReducer } from 'react'
 import { boardReducer } from '../reducers/boardReducer'
 import { createInitialState } from '../utils/board-helpers'
+import { encodeBoard } from '../wasm/boardEncoder'
+import { findBestMove } from '../wasm/suggestionWorker'
 import { Overlay } from './Overay'
+import { SuggestionButton } from './SuggestionButton'
 import { Tile } from './Tile'
 
 export const Board = () => {
@@ -55,6 +58,9 @@ export const Board = () => {
           handleClick={() => dispatch({ type: 'reset' })}
         />
       )}
+      <SuggestionButton
+        getSuggestion={() => findBestMove(encodeBoard(state.board))}
+      />
     </div>
   )
 }
