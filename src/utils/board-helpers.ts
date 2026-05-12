@@ -122,11 +122,10 @@ const getEmptyCells = (board: number[][]): { r: number; c: number }[] => {
   return result
 }
 
-const emptyBoard: number[][] = Array.from({ length: BOARD_SIZE }, () =>
-  Array(BOARD_SIZE).fill(0),
-)
-
 export const createInitialState = (): GameState => {
+  const emptyBoard: number[][] = Array.from({ length: BOARD_SIZE }, () =>
+    Array(BOARD_SIZE).fill(0),
+  )
   const newBoard = emptyBoard.map((row) => [...row])
   randomSpawnInPlace(newBoard, 'multi')
   return {
@@ -137,14 +136,14 @@ export const createInitialState = (): GameState => {
 
 export const getGameStatus = (board: number[][]): GameStatus => {
   if (hasWinningTile(board)) return 'win'
-
   if (getEmptyCells(board).length > 0) return 'playing'
-  for (let row = 0; row < BOARD_SIZE - 1; row++) {
-    for (let col = 0; col < BOARD_SIZE - 1; col++) {
-      if (
-        board[row][col] == board[row][col + 1] ||
-        board[row][col] == board[row + 1][col]
-      ) {
+  for (let row = 0; row < BOARD_SIZE; row++) {
+    for (let col = 0; col < BOARD_SIZE; col++) {
+      const current = board[row][col]
+      if (col < BOARD_SIZE - 1 && current === board[row][col + 1]) {
+        return 'playing'
+      }
+      if (row < BOARD_SIZE - 1 && current === board[row + 1][col]) {
         return 'playing'
       }
     }
