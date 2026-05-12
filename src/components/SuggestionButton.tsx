@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import aiIcon from '../assets/ai-icon.svg?url'
 import {
   CTA_LABEL_DEFAULT,
   CTA_LABEL_ERROR,
@@ -57,15 +58,10 @@ export const SuggestionButton = ({
         disabled={isError}
         className={`text-white ${isError ? 'bg-red-500 cursor-not-allowed' : 'bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200'} font-medium rounded-lg text-sm px-5 py-2.5 text-center leading-5 shadow-lg transition-transform active:scale-95 flex items-center`}
       >
-        <div
-          className={`w-5 h-5 mr-2 bg-white ${isLoading ? 'animate-pulse' : ''}`}
-          style={{
-            maskImage: 'url(/assets/ai-icon.svg)',
-            WebkitMaskImage: 'url(/assets/ai-icon.svg)',
-            maskRepeat: 'no-repeat',
-            maskSize: 'contain',
-            maskPosition: 'center',
-          }}
+        <img
+          src={aiIcon}
+          className={`w-5 h-5 mr-2 ${isLoading ? 'animate-pulse' : ''}`}
+          alt="AI icon"
         />
         {isLoading
           ? CTA_LABEL_LOADING
