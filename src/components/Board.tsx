@@ -3,7 +3,7 @@ import { boardReducer } from '../reducers/boardReducer'
 import { createInitialState } from '../utils/board-helpers'
 import { encodeBoard } from '../wasm/boardEncoder'
 import { findBestMove } from '../wasm/suggestionWorker'
-import { Overlay } from './Overay'
+import { Overlay } from './Overlay'
 import { SuggestionButton } from './SuggestionButton'
 import { Tile } from './Tile'
 
