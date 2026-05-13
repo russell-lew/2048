@@ -3,6 +3,7 @@ import { boardReducer, type Direction } from '../reducers/boardReducer'
 import { createInitialState } from '../utils/board-helpers'
 import { encodeBoard } from '../wasm/boardEncoder'
 import { findBestMove } from '../wasm/suggestionWorker'
+import MobileSwiper from './MobileSwiper'
 import { Overlay } from './Overlay'
 import { SuggestionButton } from './SuggestionButton'
 import { Tile } from './Tile'
@@ -18,6 +19,24 @@ export const Board = () => {
     [state.status, dispatch],
   )
 
+  const handleSwipe = useCallback(
+    ({ deltaX, deltaY }) => {
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        if (deltaX > 0) {
+          dispatch({ type: 'move', direction: 'right' })
+        } else {
+          dispatch({ type: 'move', direction: 'left' })
+        }
+      } else {
+        if (deltaY > 0) {
+          dispatch({ type: 'move', direction: 'down' })
+        } else {
+          dispatch({ type: 'move', direction: 'up' })
+        }
+      }
+    },
+    [handleMove],
+  )
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       e.preventDefault()
@@ -42,7 +61,7 @@ export const Board = () => {
   }, [handleMove])
 
   return (
-    <>
+    <MobileSwiper onSwipe={handleSwipe}>
       <div className="flex aspect-square w-100 md:w-125 items-center justify-center rounded-lg border-2 border-gray-300 bg-background-20 shadow-xl p-2">
         <div className="grid grid-cols-4 gap-2 w-full h-full">
           {state.board.map((row, r) =>
@@ -69,6 +88,6 @@ export const Board = () => {
       <SuggestionButton
         getSuggestion={() => findBestMove(encodeBoard(state.board))}
       />
-    </>
+    </MobileSwiper>
   )
 }
