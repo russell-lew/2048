@@ -1,5 +1,5 @@
-import { useEffect, useReducer } from 'react'
-import { boardReducer } from '../reducers/boardReducer'
+import { useCallback, useEffect, useReducer } from 'react'
+import { boardReducer, type Direction } from '../reducers/boardReducer'
 import { createInitialState } from '../utils/board-helpers'
 import { encodeBoard } from '../wasm/boardEncoder'
 import { findBestMove } from '../wasm/suggestionWorker'
@@ -9,32 +9,38 @@ import { Tile } from './Tile'
 
 export const Board = () => {
   const [state, dispatch] = useReducer(boardReducer, createInitialState())
+
+  const handleMove = useCallback(
+    (direction: Direction) => {
+      if (state.status !== 'playing') return
+      dispatch({ type: 'move', direction })
+    },
+    [state.status, dispatch],
+  )
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (state.status != 'playing') return
       e.preventDefault()
       switch (e.key) {
-        case 'ArrowUp': {
-          dispatch({ type: 'move', direction: 'up' })
-          return
-        }
-        case 'ArrowDown': {
-          dispatch({ type: 'move', direction: 'down' })
-          return
-        }
-        case 'ArrowLeft': {
-          dispatch({ type: 'move', direction: 'left' })
-          return
-        }
-        case 'ArrowRight': {
-          dispatch({ type: 'move', direction: 'right' })
-          return
-        }
+        case 'ArrowUp':
+          handleMove('up')
+          break
+        case 'ArrowDown':
+          handleMove('down')
+          break
+        case 'ArrowLeft':
+          handleMove('left')
+          break
+        case 'ArrowRight':
+          handleMove('right')
+          break
       }
     }
+
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [dispatch])
+  }, [handleMove])
+
   return (
     <div className="flex aspect-square w-100 md:w-125 items-center justify-center rounded-lg border-2 border-gray-300 bg-background-20 shadow-xl p-2">
       <div className="grid grid-cols-4 gap-2 w-full h-full">
