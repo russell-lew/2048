@@ -42,13 +42,15 @@ export const Board = () => {
   }, [handleMove])
 
   return (
-    <div className="flex aspect-square w-100 md:w-125 items-center justify-center rounded-lg border-2 border-gray-300 bg-background-20 shadow-xl p-2">
-      <div className="grid grid-cols-4 gap-2 w-full h-full">
-        {state.board.map((row, r) =>
-          row.map((num, c) => (
-            <Tile key={`${r}-${c}`} id={`${r}-${c}`} value={num} />
-          )),
-        )}
+    <>
+      <div className="flex aspect-square w-100 md:w-125 items-center justify-center rounded-lg border-2 border-gray-300 bg-background-20 shadow-xl p-2">
+        <div className="grid grid-cols-4 gap-2 w-full h-full">
+          {state.board.map((row, r) =>
+            row.map((num, c) => (
+              <Tile key={`${r}-${c}`} id={`${r}-${c}`} value={num} />
+            )),
+          )}
+        </div>
       </div>
       {state.status == 'gameOver' && (
         <Overlay
@@ -67,6 +69,6 @@ export const Board = () => {
       <SuggestionButton
         getSuggestion={() => findBestMove(encodeBoard(state.board))}
       />
-    </div>
+    </>
   )
 }
