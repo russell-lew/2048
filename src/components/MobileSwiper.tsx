@@ -1,28 +1,38 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 
-export default function MobileSwiper({ children, onSwipe }) {
-  const wrapperRef = useRef(null)
-  const [startX, setStartX] = useState(0)
-  const [startY, setStartY] = useState(0)
+interface SwipeData {
+  deltaX: number
+  deltaY: number
+}
 
-  const handleTouchStart = useCallback((e) => {
-    if (!wrapperRef.current.contains(e.target)) {
+interface MobileSwiperProps {
+  children: ReactNode
+  onSwipe: (data: SwipeData) => void
+}
+
+export default function MobileSwiper({ children, onSwipe }: MobileSwiperProps) {
+  const wrapperRef = useRef<HTMLDivElement>(null)
+
+  const [startX, setStartX] = useState<number>(0)
+  const [startY, setStartY] = useState<number>(0)
+
+  const handleTouchStart = useCallback((e: globalThis.TouchEvent) => {
+    if (!wrapperRef.current || !wrapperRef.current.contains(e.target as Node)) {
       return
     }
-
-    e.preventDefault()
 
     setStartX(e.touches[0].clientX)
     setStartY(e.touches[0].clientY)
   }, [])
 
   const handleTouchEnd = useCallback(
-    (e) => {
-      if (!wrapperRef.current.contains(e.target)) {
+    (e: globalThis.TouchEvent) => {
+      if (
+        !wrapperRef.current ||
+        !wrapperRef.current.contains(e.target as Node)
+      ) {
         return
       }
-
-      e.preventDefault()
 
       const endX = e.changedTouches[0].clientX
       const endY = e.changedTouches[0].clientY
@@ -35,8 +45,8 @@ export default function MobileSwiper({ children, onSwipe }) {
   )
 
   useEffect(() => {
-    window.addEventListener('touchstart', handleTouchStart)
-    window.addEventListener('touchend', handleTouchEnd)
+    window.addEventListener('touchstart', handleTouchStart, { passive: false })
+    window.addEventListener('touchend', handleTouchEnd, { passive: false })
 
     return () => {
       window.removeEventListener('touchstart', handleTouchStart)
@@ -44,5 +54,9 @@ export default function MobileSwiper({ children, onSwipe }) {
     }
   }, [handleTouchStart, handleTouchEnd])
 
-  return <div ref={wrapperRef}>{children}</div>
+  return (
+    <div ref={wrapperRef} style={{ touchAction: 'none' }}>
+      {children}
+    </div>
+  )
 }
