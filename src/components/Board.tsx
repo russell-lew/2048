@@ -20,22 +20,15 @@ export const Board = () => {
   )
 
   const handleSwipe = useCallback(
-    ({ deltaX, deltaY }) => {
+    ({ deltaX, deltaY }: { deltaX: number; deltaY: number }) => {
+      if (state.status !== 'playing') return
       if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        if (deltaX > 0) {
-          dispatch({ type: 'move', direction: 'right' })
-        } else {
-          dispatch({ type: 'move', direction: 'left' })
-        }
+        handleMove(deltaX > 0 ? 'right' : 'left')
       } else {
-        if (deltaY > 0) {
-          dispatch({ type: 'move', direction: 'down' })
-        } else {
-          dispatch({ type: 'move', direction: 'up' })
-        }
+        handleMove(deltaY > 0 ? 'down' : 'up')
       }
     },
-    [handleMove],
+    [state.status, handleMove],
   )
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -62,7 +55,7 @@ export const Board = () => {
 
   return (
     <MobileSwiper onSwipe={handleSwipe}>
-      <div className="flex aspect-square w-100 md:w-125 items-center justify-center rounded-lg border-2 border-gray-300 bg-background-20 shadow-xl p-2">
+      <div className="flex aspect-square w-80 md:w-125 items-center justify-center rounded-lg border-2 border-gray-300 bg-background-20 shadow-xl p-2">
         <div className="grid grid-cols-4 gap-2 w-full h-full">
           {state.board.map((row, r) =>
             row.map((num, c) => (
