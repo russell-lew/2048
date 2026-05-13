@@ -4,7 +4,7 @@ function App() {
   return (
     <div className="flex h-screen w-full flex-col bg-gray-100">
       <header className="flex-none bg-background-10 p-4">
-        <h1 className="text-xl text-center font-bold text-primary-text-color">
+        <h1 className="text-5xl md:text-6xl text-center font-bold text-primary-text-color">
           2048
         </h1>
       </header>
