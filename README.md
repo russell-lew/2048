@@ -1,73 +1,48 @@
-# React + TypeScript + Vite
+A responsive, high-performance implementation of 2048 featuring a WebAssembly-powered AI assistant.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[Live Demo](https://russell-lew.github.io/2048/)
 
-Currently, two official plugins are available:
+## Highlights
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Front end:** Using React's own `useReducer` for responsive state managements and Tailwind for styling
+- **Expectimax AI Model:** Incorporated an existing C++ implementation from [this repository](https://github.com/nneonneo/2048-ai)
+- **Offline AI:** Compiled to Web Assembly to run on the browser
+- **Cross platform:** Desktop and mobile friendly
 
-## React Compiler
+## Controls
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Desktop:** Use your `Arrow Keys` to move tiles.
+- **Mobile:** Swipe in any direction to move.
+- **AI Hint:** Click the AI icon (bottom-right) for the best move suggestion.
 
-## Expanding the ESLint configuration
+## Assumptions
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Spawn Rate:** 80% chance for `2`, 20% chance for `4`.
+- **Win Condition:** Game ends at the 2048 tile (configurable in `constants.ts`).
+- **AI behaviour:** Does not impose best moves, only a gentle recommendation.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Developer Setup
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Clone and install
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+git clone https://github.com/russell-lew/2048.git
+cd 2048
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Local development
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+npm run dev
+```
+
+### Web assembly compilation
+
+- Setup EMSCRIPTEN to compile the C++ Expectimax source, or simply use the pre-built model in `src/wasm/`
+
+### Deployment
+
+- Web page is hosted on Github pages, you may fork this repository and modify homepage settings in `package.json`.
+
+- See Github Pages documentation on how to quickly deploy.
