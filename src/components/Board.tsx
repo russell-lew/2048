@@ -22,6 +22,8 @@ export const Board = () => {
   const handleSwipe = useCallback(
     ({ deltaX, deltaY }: { deltaX: number; deltaY: number }) => {
       if (state.status !== 'playing') return
+      const threshold = 30
+      if (Math.abs(deltaX) < threshold && Math.abs(deltaY) < threshold) return
       if (Math.abs(deltaX) > Math.abs(deltaY)) {
         handleMove(deltaX > 0 ? 'right' : 'left')
       } else {
@@ -30,6 +32,7 @@ export const Board = () => {
     },
     [state.status, handleMove],
   )
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       e.preventDefault()
