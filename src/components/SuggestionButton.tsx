@@ -14,6 +14,7 @@ export const SuggestionButton = ({
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState(false)
   const [suggestion, setSuggestion] = useState<string | null>(null)
+  const [isFlashing, setIsFlashing] = useState(false)
 
   const handleClick = async () => {
     if (isLoading) return
@@ -24,6 +25,8 @@ export const SuggestionButton = ({
       const result = await getSuggestion()
       if (typeof result === 'string') {
         setSuggestion(result)
+        setIsFlashing(true)
+        setTimeout(() => setIsFlashing(false), 200)
       }
     } catch (error) {
       setIsError(true)
@@ -46,7 +49,17 @@ export const SuggestionButton = ({
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
       {suggestion && !isLoading && (
-        <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 bg-white text-slate-900 px-4 py-2 rounded-2xl shadow-xl border border-slate-100 text-m font-bold relative mb-1">
+        <div
+          className={`
+          animate-in fade-in slide-in-from-bottom-2 duration-300 
+          px-4 py-2 rounded-2xl shadow-xl border text-m font-bold relative mb-1 transition-colors
+          ${
+            isFlashing
+              ? 'bg-blue-50 border-blue-200 text-blue-700' // The "Feedback" state
+              : 'bg-white border-slate-100 text-slate-900' // The "Default" state
+          }
+        `}
+        >
           <span className="text-blue-600 mr-1">Suggested:</span> {suggestion}
           <div className="absolute -bottom-1.5 right-6 w-3 h-3 bg-white rotate-45 border-r border-b border-slate-100" />
         </div>
