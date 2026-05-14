@@ -1,4 +1,9 @@
-import { BOARD_SIZE, WIN_CONDITION } from '../constants/constants'
+import {
+  BOARD_SIZE,
+  MAX_NEW_TILES,
+  SPAWN_RATIO_2,
+  WIN_CONDITION,
+} from '../constants/constants'
 import type { GameState, GameStatus } from '../reducers/boardReducer'
 
 export const getRandomInt = (min: number, max: number): number => {
@@ -8,7 +13,7 @@ export const getRandomInt = (min: number, max: number): number => {
 }
 
 const getRandomSpawnValue = (): number => {
-  return Math.random() < 0.8 ? 2 : 4
+  return Math.random() < SPAWN_RATIO_2 ? 2 : 4
 }
 
 const reverseInPlace = (m: number[][]) => {
@@ -100,7 +105,7 @@ export const randomSpawnInPlace = (
   const emptyCells = getEmptyCells(board)
   if (emptyCells.length == 0) return
 
-  const requestedSpawn = mode == 'single' ? 1 : getRandomInt(1, 5)
+  const requestedSpawn = mode == 'single' ? 1 : getRandomInt(1, MAX_NEW_TILES)
   const numSpawn = Math.min(requestedSpawn, emptyCells.length)
 
   for (let i = 0; i < numSpawn; i++) {
