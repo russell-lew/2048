@@ -17,9 +17,9 @@ A responsive, high-performance implementation of 2048 featuring a WebAssembly-po
 
 ## Assumptions
 
-- **Spawn Rate:** 80% chance for `2`, 20% chance for `4`.
+- **Spawn Rate:** 90% chance for `2`, 10% chance for `4`, only a single tile each valid turn.
 - **Win Condition:** Game ends at the 2048 tile (configurable in `constants.ts`).
-- **AI behaviour:** Does not impose best moves, only a gentle recommendation.
+- **AI behaviour:** Provides a non-blocking, stateless suggestion. The model evaluates the current board heuristic without historical moves.
 
 ## Developer Setup
 
