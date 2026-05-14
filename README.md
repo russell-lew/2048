@@ -19,7 +19,10 @@ A responsive, high-performance implementation of 2048 featuring a WebAssembly-po
 
 - **Spawn Rate:** 90% chance for `2`, 10% chance for `4`, only a single tile each valid turn.
 - **Win Condition:** Game ends at the 2048 tile (configurable in `constants.ts`).
+- **AI output:** Returns 1 of 4 directions only. No suggestions in strategy or heuristic to follow.
 - **AI behaviour:** Provides a non-blocking, stateless suggestion. The model evaluates the current board heuristic without historical moves.
+- **Scoring:** Unlike the original game, scoring is not required to win, only by reaching 2048.
+- **Platform:** The browser supports Web Assembly. (e.g. updated (post-2017) to support Web Assembly / not in iOS lockdown mode)
 
 ## Developer Setup
 
