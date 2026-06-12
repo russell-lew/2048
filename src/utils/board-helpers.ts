@@ -87,18 +87,42 @@ const moveLeft = (
 }
 
 const moveRowLeft = (row: number[]) => {
-  const newRow = []
-  const filteredRow = row.filter((n) => n != 0)
-  for (let i = 0; i < filteredRow.length; i++) {
-    if (i < filteredRow.length - 1 && filteredRow[i] == filteredRow[i + 1]) {
-      newRow.push(filteredRow[i] * 2)
-      i++
+  const segments: number[][] = []
+  let currentSegment: number[] = []
+  for (const val of row) {
+    if (val === -1) {
+      segments.push(currentSegment)
+      currentSegment = []
     } else {
-      newRow.push(filteredRow[i])
+      currentSegment.push(val)
     }
   }
-  while (newRow.length < BOARD_SIZE) {
-    newRow.push(0)
+  segments.push(currentSegment)
+
+  const processedSegments: number[][] = []
+  for (const segment of segments) {
+    const filtered = segment.filter((n) => n !== 0)
+    const merged: number[] = []
+    for (let i = 0; i < filtered.length; i++) {
+      if (i < filtered.length - 1 && filtered[i] === filtered[i + 1]) {
+        merged.push(filtered[i] * 2)
+        i++
+      } else {
+        merged.push(filtered[i])
+      }
+    }
+    while (merged.length < segment.length) {
+      merged.push(0)
+    }
+    processedSegments.push(merged)
+  }
+
+  const newRow: number[] = []
+  for (let i = 0; i < processedSegments.length; i++) {
+    newRow.push(...processedSegments[i])
+    if (i < processedSegments.length - 1) {
+      newRow.push(-1)
+    }
   }
   return newRow
 }

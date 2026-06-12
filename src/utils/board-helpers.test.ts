@@ -21,6 +21,30 @@ describe('board-helpers', () => {
       expect(didMove).toBe(true)
     })
 
+    it('should slide tiles to the left and not move past corner blocks', () => {
+      const board = [
+        [-1, 0, 2, 2],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+      ]
+      const { newBoard, didMove } = move(board, 'left')
+      expect(newBoard[0]).toEqual([-1, 4, 0, 0])
+      expect(didMove).toBe(true)
+    })
+
+    it('should slide tiles to the left and not move past 2 corner blocks', () => {
+      const board = [
+        [-1, -1, 2, 2],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+      ]
+      const { newBoard, didMove } = move(board, 'left')
+      expect(newBoard[0]).toEqual([-1, -1, 4, 0])
+      expect(didMove).toBe(true)
+    })
+
     it('should slide tiles to the left and merge identical neighbors', () => {
       const board = [
         [2, 2, 0, 0],
