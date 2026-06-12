@@ -76,19 +76,7 @@ const moveLeft = (
 ): { newBoard: number[][]; didMove: boolean } => {
   let didMove = false
   const newBoard = board.map((row) => {
-    const newRow = []
-    const filteredRow = row.filter((n) => n != 0)
-    for (let i = 0; i < filteredRow.length; i++) {
-      if (i < filteredRow.length - 1 && filteredRow[i] == filteredRow[i + 1]) {
-        newRow.push(filteredRow[i] * 2)
-        i++
-      } else {
-        newRow.push(filteredRow[i])
-      }
-    }
-    while (newRow.length < BOARD_SIZE) {
-      newRow.push(0)
-    }
+    const newRow = moveRowLeft(row)
     const rowChanged = newRow.some((val, index) => val !== row[index])
     if (rowChanged) {
       didMove = true
@@ -98,20 +86,38 @@ const moveLeft = (
   return { newBoard, didMove }
 }
 
+const moveRowLeft = (row: number[]) => {
+  const newRow = []
+  const filteredRow = row.filter((n) => n != 0)
+  for (let i = 0; i < filteredRow.length; i++) {
+    if (i < filteredRow.length - 1 && filteredRow[i] == filteredRow[i + 1]) {
+      newRow.push(filteredRow[i] * 2)
+      i++
+    } else {
+      newRow.push(filteredRow[i])
+    }
+  }
+  while (newRow.length < BOARD_SIZE) {
+    newRow.push(0)
+  }
+  return newRow
+}
+
 export const randomSpawnInPlace = (
   board: number[][],
-  mode: 'single' | 'multi',
+  mode: 'single' | 'multi' | 'block',
 ): void => {
   const emptyCells = getEmptyCells(board)
   if (emptyCells.length == 0) return
 
-  const requestedSpawn = mode == 'single' ? 1 : getRandomInt(1, MAX_NEW_TILES)
+  const requestedSpawn =
+    mode == 'single' ? 1 : mode == 'block' ? 1 : getRandomInt(1, MAX_NEW_TILES)
   const numSpawn = Math.min(requestedSpawn, emptyCells.length)
 
   for (let i = 0; i < numSpawn; i++) {
     const randomIdx = getRandomInt(0, emptyCells.length - 1)
     const [{ r, c }] = emptyCells.splice(randomIdx, 1)
-    board[r][c] = getRandomSpawnValue()
+    board[r][c] = mode == 'block' ? -1 : getRandomSpawnValue()
   }
 }
 
@@ -132,6 +138,7 @@ export const createInitialState = (): GameState => {
     Array(BOARD_SIZE).fill(0),
   )
   const newBoard = emptyBoard.map((row) => [...row])
+  randomSpawnInPlace(newBoard, 'block')
   randomSpawnInPlace(newBoard, 'multi')
   return {
     status: 'playing',

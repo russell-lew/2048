@@ -10,6 +10,9 @@
 }
 
 @layer components {
+  .tile-block {
+    @apply bg-[#000000];
+  }
   .tile-0 {
     @apply bg-cell-background;
   }

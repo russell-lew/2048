@@ -9,6 +9,18 @@ import {
 
 describe('board-helpers', () => {
   describe('move', () => {
+    it('should slide tiles to the left and not move past blocks', () => {
+      const board = [
+        [0, -1, 2, 2],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+      ]
+      const { newBoard, didMove } = move(board, 'left')
+      expect(newBoard[0]).toEqual([0, -1, 4, 0])
+      expect(didMove).toBe(true)
+    })
+
     it('should slide tiles to the left and merge identical neighbors', () => {
       const board = [
         [2, 2, 0, 0],
@@ -119,7 +131,17 @@ describe('board-helpers', () => {
   })
 
   describe('randomSpawnInPlace', () => {
-    it('should add a tile to an empty cell', () => {
+    it('should add a block to an empty cell', () => {
+      const board = [
+        [2, 2, 2, 2],
+        [2, 2, 2, 2],
+        [2, 2, 2, 2],
+        [2, 2, 2, 0],
+      ]
+      randomSpawnInPlace(board, 'block')
+      expect(board[3][3]).toBe(-1)
+    })
+    it('should add a single to an empty cell', () => {
       const board = [
         [2, 2, 2, 2],
         [2, 2, 2, 2],
