@@ -7,6 +7,7 @@ import MobileSwiper from './MobileSwiper'
 import { Overlay } from './Overlay'
 import { SuggestionButton } from './SuggestionButton'
 import { Tile } from './Tile'
+import { UndoButton } from './UndoButton'
 
 export const Board = () => {
   const [state, dispatch] = useReducer(boardReducer, createInitialState())
@@ -18,6 +19,11 @@ export const Board = () => {
     },
     [state.status, dispatch],
   )
+
+  const handleUndo = useCallback(() => {
+    if (!state.prevBoard) return
+    dispatch({ type: 'undo' })
+  }, [state.status, dispatch])
 
   const handleSwipe = useCallback(
     ({ deltaX, deltaY }: { deltaX: number; deltaY: number }) => {
@@ -81,6 +87,7 @@ export const Board = () => {
           handleClick={() => dispatch({ type: 'reset' })}
         />
       )}
+      <UndoButton handleClick={handleUndo} />
       <SuggestionButton
         getSuggestion={() => findBestMove(encodeBoard(state.board))}
       />

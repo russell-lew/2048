@@ -11,6 +11,7 @@ export const boardReducer = (state: GameState, action: Action): GameState => {
       return createInitialState()
     }
     case 'move': {
+      const snapshot = structuredClone(state.board)
       const { newBoard, didMove } = move(state.board, action.direction)
       const latestStatus = getGameStatus(newBoard)
       didMove && randomSpawnInPlace(newBoard, 'single')
@@ -18,12 +19,19 @@ export const boardReducer = (state: GameState, action: Action): GameState => {
         ...state,
         ...(didMove && { board: newBoard }),
         ...(latestStatus != state.status && { status: latestStatus }),
+        prevBoard: snapshot,
       }
     }
     case 'check': {
       return {
         ...state,
         status: getGameStatus(state.board),
+      }
+    }
+    case 'undo': {
+      return {
+        ...state,
+        board: state.prevBoard!!,
       }
     }
     default:
@@ -33,6 +41,7 @@ export const boardReducer = (state: GameState, action: Action): GameState => {
 
 export type GameState = {
   board: number[][]
+  prevBoard?: number[][]
   status: GameStatus
 }
 
@@ -44,3 +53,4 @@ type Action =
   | { type: 'reset' }
   | { type: 'move'; direction: Direction }
   | { type: 'check' }
+  | { type: 'undo' }
